@@ -1,0 +1,85 @@
+theme:
+    name: material
+    features:
+        - navigation.sections  # Sections are included in the navigation on the left.
+        - navigation.expand  # Expand collapsible sections by default
+        - toc.integrate  # Table of contents is integrated on the left; does not appear separately on the right.
+        - header.autohide  # header disappears as you scroll
+    palette:
+        # Light mode / dark mode
+        # We deliberately don't automatically use `media` to check a user's preferences. We default to light mode as
+        # (a) it looks more professional, and (b) is more obvious about the fact that it offers a (dark mode) toggle.
+        - scheme: default
+          primary: white
+          accent: amber
+          toggle:
+             icon: material/weather-night
+             name: Switch to dark mode
+        - scheme: slate
+          primary: black
+          accent: amber
+          toggle:
+             icon: material/weather-sunny
+             name: Switch to light mode
+    icon:
+        repo: fontawesome/brands/github  # GitHub logo in top right
+
+
+site_name: bayeux
+site_description: The documentation for the bayeux software library.
+site_author: Colin Carroll
+site_url: https://jax-ml.github.io/bayeux
+
+repo_url: https://github.com/jax-ml/bayeux
+repo_name: jax-ml/bayeux
+edit_uri: ""  # No edit button, as some of our pages are in /docs and some in /examples via symlink, so it's impossible for them all to be accurate
+
+strict: true  # Don't allow warnings during the build process
+
+extra_javascript:
+    # The below two make MathJax work, see https://squidfunk.github.io/mkdocs-material/reference/mathjax/
+    - _static/mathjax.js
+    - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+    - _static/custom_css.css
+
+markdown_extensions:
+    - pymdownx.arithmatex:  # Render LaTeX via MathJax
+        generic: true
+    - pymdownx.snippets  # Allowing hidden expandable regions denoted by ???
+    - pymdownx.superfences  # Seems to enable syntax highlighting when used with the Material theme.
+    - pymdownx.details  # Allowing hidden expandable regions denoted by ???
+    - admonition
+    - toc:
+        permalink: "¤"  # Adds a clickable permalink to each section heading
+        toc_depth: 4
+
+plugins:
+    - search  # default search plugin; needs manually re-enabling when using any other plugins
+    - autorefs  # Cross-links to headings
+    - mknotebooks  # Jupyter notebooks
+    - mkdocstrings:
+        handlers:
+            python:
+                selection:
+                    inherited_members: true  # Allow looking up inherited methods
+                rendering:
+                    show_root_heading: true  # actually display anything at all...
+                    show_if_no_docstring: true
+                    show_signature_annotations: true
+                    show_source: false  # don't include source code
+                    members_order: source  # order methods according to their order of definition in the source code, not alphabetical order
+                    heading_level: 2
+
+nav:
+    - 'index.md'
+    - Defining models: 'inference.md'
+    - Inspecting models and inference: 'inspecting.md'
+    - Debug Mode: 'debug_mode.md'
+    - Examples:
+        - Using with Dynamax: 'examples/dynamax_and_bayeux.ipynb'
+        - Using with NumPyro: 'examples/numpyro_and_bayeux.ipynb'
+        - Using with Oryx: 'examples/oryx_and_bayeux.ipynb'
+        - Using with PyMC: 'examples/pymc_and_bayeux.ipynb'
+        - Using with TFP: 'examples/tfp_and_bayeux.ipynb'

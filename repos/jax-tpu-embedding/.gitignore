@@ -1,0 +1,30 @@
+# Compiled python modules.
+*.pyc
+
+# Byte-compiled
+_pycache__/
+.cache/
+
+# Poetry, setuptools, PyPI distribution artifacts.
+/*.egg-info
+.eggs/
+dist/
+poetry.lock
+
+# Tests
+.pytest_cache/
+
+# Type checking
+.pytype/
+
+# Other
+*.DS_Store
+
+# PyCharm
+.idea
+
+# Bazel
+/bazel-*
+
+# Built wheels.
+/*.whl

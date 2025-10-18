@@ -1,0 +1,14 @@
+**/*.pyc
+**/*.so
+**/*.egg-info
+**/*.whl
+/dist/
+.ipynb_checkpoints
+.DS_Store
+.mypy_cache/
+.pytype/
+.idea
+.vscode
+.envrc
+build
+*venv*

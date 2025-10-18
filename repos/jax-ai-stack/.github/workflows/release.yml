@@ -1,0 +1,53 @@
+name: Build & Release
+
+on:
+  workflow_dispatch: {}  # allows triggering this workflow manually
+  pull_request:  # trigger on pull requests affecting relevant files
+    branches:
+      - main
+    paths:
+      - '**workflows/release.yml'
+      - 'pyproject.toml'
+  release:  # trigger on published release
+    types:
+      - published
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'release' }}
+
+jobs:
+  build_package:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - name: Build package
+        run: pipx run build
+      - name: List files
+        run: ls -l dist/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: distribution
+          path: |
+            dist/*.tar.gz
+            dist/*.whl
+
+  upload_pypi:
+    name: Release & Upload to PyPI
+    # Only publish release to PyPI when a github release is created.
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: build_package
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0  # v5.0.0
+        with:
+          name: distribution
+          path: dist
+      - name: List files
+        run: ls -l dist/
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e  # v1.13.0
