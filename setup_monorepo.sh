@@ -36,22 +36,35 @@ cd repos
 for repo in "${REPOS[@]}"; do
     echo "Cloning $repo..."
     
+    # Validate repository name for safety
+    if [[ ! "$repo" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+        echo "Error: Invalid repository name '$repo'. Skipping for security."
+        continue
+    fi
+    
     # Skip if directory already exists
     if [ -d "$repo" ]; then
         echo "Directory $repo already exists, skipping clone..."
         continue
     fi
     
-    # Clone the repository
-    git clone "$BASE_URL/$repo.git" "$repo"
-    
-    # Remove the .git directory to integrate into monorepo
-    if [ -d "$repo/.git" ]; then
-        echo "Removing .git directory from $repo..."
-        rm -rf "$repo/.git"
+    # Clone the repository with error handling
+    if git clone "$BASE_URL/$repo.git" "$repo"; then
+        echo "Successfully cloned $repo"
+        
+        # Remove the .git directory to integrate into monorepo
+        if [ -d "$repo/.git" ]; then
+            echo "Removing .git directory from $repo..."
+            rm -rf "$repo/.git"
+        fi
+        
+        echo "Successfully processed $repo"
+    else
+        echo "Error: Failed to clone $repo. Continuing with next repository."
+        # Remove any partial clone directory
+        [ -d "$repo" ] && rm -rf "$repo"
+        continue
     fi
-    
-    echo "Successfully processed $repo"
 done
 
 cd ..
