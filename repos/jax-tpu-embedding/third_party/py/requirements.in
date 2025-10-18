@@ -1,0 +1,24 @@
+# Library.
+absl-py
+flax @ https://github.com/google/flax/archive/e2134af.zip
+numpy
+# Pre-release of JAX required for SparseCore TPUs.
+jax[tpu] --pre
+portpicker
+
+# Build utilities.
+auditwheel
+build
+setuptools
+
+# Testing.
+clu
+einops
+google-benchmark
+optax
+orbax
+protobuf
+
+# Paths for pre-releases of JAX and libtpu.
+--extra-index-url https://us-python.pkg.dev/ml-oss-artifacts-published/jax-public-nightly-artifacts-registry/simple/
+-f https://storage.googleapis.com/jax-releases/libtpu_releases.html
